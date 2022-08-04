@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { auth, db, createUser } from '../fireBase';
 import { collection, addDoc } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 export function SignUp(){
 
@@ -52,6 +53,7 @@ export function SignUp(){
     return(
     <>
         <form className='box'>
+            <label className='label'>登録フォーム</label>
             <label className='label'>ユーザー名</label>
             <input className='input' type="text" name="userName" id="userName" onChange={ handleChange }/>
             <label className='label'>メールアドレス</label>
@@ -59,6 +61,9 @@ export function SignUp(){
             <label className='label'>パスワード</label>
             <input className='input' type="password" name="passWord" id="passWord" onChange={ handleChange }/>
             <button className="button is-primary" onClick={ handleClick }>新規登録</button>
+            <Link to='/signin' className='button is-link'>
+                    ログイン
+            </Link>
         </form>
     </>
     )

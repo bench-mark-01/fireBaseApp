@@ -44,8 +44,7 @@ export function SignIn(){
     return(
     <>
         <form className='box'>
-            <label className='label'>ユーザー名</label>
-            <input className='input' type="text" name="userName" id="userName" onChange={ handleChange }/>
+            <label className='label'>ログインフォーム</label>
             <label className='label'>メールアドレス</label>
             <input className='input' type="email" name="mail" id="mail" onChange={ handleChange }/>
             <label className='label'>パスワード</label>
