@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { auth, db, createUser } from '../fireBase';
-import { collection, addDoc } from "firebase/firestore";
-import { Link } from "react-router-dom";
+import { auth, createUser, updateProfile } from '../fireBase';
+import { Button } from '../Button';
 
 export function SignUp(){
 
@@ -27,15 +26,12 @@ export function SignUp(){
     const handleClick = (e) => {
         e.preventDefault();
         createUser(auth, userData.mail, userData.passWord)
-        .then(result =>{
-            const user = result.user
+        .then( userCredential =>{
+            const user = userCredential.user;
             if(user){
-                const uid = user.uid;
-                console.log('signup 成功'+ ' ' + user.email);
-                addDoc(collection(db, "users"), {
-                    uid: uid,
-                    userName: userData.userName
-                });
+                updateProfile(auth.currentUser,{
+                    displayName: userData.userName
+                })
             }
         })
         .catch(error =>{
@@ -47,8 +43,7 @@ export function SignUp(){
                     console.log('メールアドレスの形式が不正です')
                     break;
             }
-        })
-
+        });
     };
     return(
     <>
@@ -60,10 +55,8 @@ export function SignUp(){
             <input className='input' type="email" name="mail" id="mail" onChange={ handleChange }/>
             <label className='label'>パスワード</label>
             <input className='input' type="password" name="passWord" id="passWord" onChange={ handleChange }/>
-            <button className="button is-primary" onClick={ handleClick }>新規登録</button>
-            <Link to='/signin' className='button is-link'>
-                    ログイン
-            </Link>
+            <Button event={handleClick} content='新規登録'/>
+            <Button path={'/signin'} content='ログインフォーム' className='button is-link'/>
         </form>
     </>
     )
