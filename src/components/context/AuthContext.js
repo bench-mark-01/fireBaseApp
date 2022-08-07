@@ -3,23 +3,22 @@ import { onAuth, auth } from "../fireBase";
 
 const AuthContext = createContext();
 
-export function useAuthContext(){
+export const useAuthContext = () =>{
     return useContext(AuthContext);
 };
 
-export function AuthProvider({ children }){
+export const AuthProvider = ({ children }) =>{
     const [user, setUser] = useState('');
     const value = {
         user,
     };
 
     onAuth(auth, (user) => {
-        if(user){
-            setUser(user.displayName);
-        }
-        else{
+        if(!user){
             setUser('Guest User');
+            return;
         }
+        setUser(user.displayName);
     });
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

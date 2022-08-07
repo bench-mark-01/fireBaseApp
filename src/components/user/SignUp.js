@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth, createUser, updateProfile } from '../fireBase';
 import { Button } from '../Button';
 
-export function SignUp(){
+export const SignUp = () =>{
 
     const [userData, setUserData] = useState({
         userName: '',

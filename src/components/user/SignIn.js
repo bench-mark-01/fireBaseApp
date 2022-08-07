@@ -3,7 +3,7 @@ import { useAuthContext } from '../context/AuthContext';
 import { auth, signIn, signOut } from '../fireBase';
 import { Button } from '../Button';
 
-export function SignIn(){
+export const SignIn = () =>{
     const {user} = useAuthContext();
     const [inputUserData, setInputUserData] = useState({
         mail: '',
@@ -11,25 +11,12 @@ export function SignIn(){
     })
     const handleChange = e => {
         if(!e) return;
-        switch(e.target.name){
-            case 'mail':
-                setInputUserData({...inputUserData, mail: e.target.value});
-                break;
-            case 'passWord':
-                setInputUserData({...inputUserData, passWord: e.target.value});
-                break;
-        }
+        e.target.name === 'mail' ? setInputUserData({...inputUserData, mail: e.target.value}):setInputUserData({...inputUserData, passWord: e.target.value})
     }
-    const handleClick = (e) => {
+    
+    async function handleClick(e){
         e.preventDefault();
-        signIn(auth, inputUserData.mail, inputUserData.passWord)
-        .then(userCredential =>{
-            const currentUser = userCredential.user
-            if(!currentUser) return;
-
-            console.log('login');
-            console.log(currentUser.displayName);
-        })
+        await signIn(auth, inputUserData.mail, inputUserData.passWord)
         .catch(error =>{
             switch(error.code){
                 case 'auth/invalid-email':
@@ -41,11 +28,11 @@ export function SignIn(){
             }
         })
     }
-    const handleSignOut = () => {
-        signOut(auth).then((result)=>{
-            console.log('logout!')
-        });
+
+    async function handleSignOut(){
+        const session = await signOut(auth).catch(e => console.error(e));
     }
+
     return(
     <>
         <form className='box'>
