@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { auth, db, createUser } from '../fireBase';
-import { collection, addDoc } from "firebase/firestore";
+import { auth, createUser, updateProfile } from '../fireBase';
+import { Button } from '../Button';
 
-export function SignUp(){
+export const SignUp = () =>{
 
     const [userData, setUserData] = useState({
         userName: '',
@@ -26,15 +26,12 @@ export function SignUp(){
     const handleClick = (e) => {
         e.preventDefault();
         createUser(auth, userData.mail, userData.passWord)
-        .then(result =>{
-            const user = result.user
+        .then( userCredential =>{
+            const user = userCredential.user;
             if(user){
-                const uid = user.uid;
-                console.log('signup 成功'+ ' ' + user.email);
-                addDoc(collection(db, "users"), {
-                    uid: uid,
-                    userName: userData.userName
-                });
+                updateProfile(auth.currentUser,{
+                    displayName: userData.userName
+                })
             }
         })
         .catch(error =>{
@@ -46,19 +43,20 @@ export function SignUp(){
                     console.log('メールアドレスの形式が不正です')
                     break;
             }
-        })
-
+        });
     };
     return(
     <>
         <form className='box'>
+            <label className='label'>登録フォーム</label>
             <label className='label'>ユーザー名</label>
             <input className='input' type="text" name="userName" id="userName" onChange={ handleChange }/>
             <label className='label'>メールアドレス</label>
             <input className='input' type="email" name="mail" id="mail" onChange={ handleChange }/>
             <label className='label'>パスワード</label>
             <input className='input' type="password" name="passWord" id="passWord" onChange={ handleChange }/>
-            <button className="button is-primary" onClick={ handleClick }>新規登録</button>
+            <Button event={handleClick} content='新規登録'/>
+            <Button path={'/signin'} content='ログインフォーム' className='button is-link'/>
         </form>
     </>
     )
